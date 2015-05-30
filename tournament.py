@@ -19,6 +19,7 @@ def deleteMatches():
     db.commit()
     db.close
 
+
 def deletePlayers():
     """Remove all the player records from the database."""
     db = connect()
@@ -27,10 +28,12 @@ def deletePlayers():
     db.commit()
     db.close
 
+
 def newTournament():
     deleteMatches()
     deletePlayers()
     print "Player and Match data has been reset."
+
 
 def countPlayers():
     """Returns the number of players currently registered."""
@@ -41,6 +44,7 @@ def countPlayers():
     db.close
 
     return count
+
 
 def registerPlayer(name):
     """Adds a player to the tournament database.
@@ -53,7 +57,7 @@ def registerPlayer(name):
     """
     db = connect()
     c = db.cursor()
-    c.execute( "INSERT into players (name) VALUES ( %s );", (name,) )
+    c.execute("INSERT into players (name) VALUES (%s);", (name,))
     db.commit()
     db.close
 
@@ -61,8 +65,8 @@ def registerPlayer(name):
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
 
-    The first entry in the list should be the player in first place, or a player
-    tied for first place if there is currently a tie.
+    The first entry in the list should be the player in first place, or a
+    player tied for first place if there is currently a tie.
 
     Returns:
       A list of tuples, each of which contains (id, name, wins, matches):
@@ -73,11 +77,12 @@ def playerStandings():
     """
     db = connect()
     c = db.cursor()
-    c.execute( "SELECT * FROM standings ORDER BY wins DESC;")
+    c.execute("SELECT * FROM standings ORDER BY wins DESC;")
     standings = c.fetchall()
     db.close()
 
     return standings
+
 
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
@@ -88,9 +93,12 @@ def reportMatch(winner, loser):
     """
     db = connect()
     c = db.cursor()
-    c.execute( "INSERT INTO games (winner, loser) VALUES (%s, %s);", (winner, loser, ) )
+    c.execute(
+        "INSERT INTO games (winner, loser) VALUES (%s, %s);", (winner, loser,)
+    )
     db.commit()
     db.close()
+
 
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
@@ -110,11 +118,17 @@ def swissPairings():
     # Use the playerStandings function to get our standings, because DRY.
     standings = playerStandings()
 
-    # Loop through every other player in the standings and pair them with the next adjacent player.
+    # Loop through every other player in the standings and pair them with the
+    # next adjacent player.
     pairs = []
-    for i in range( 0, len(standings), 2):
-        pair = ( standings[i][0], standings[i][1], standings[i+1][0], standings[i+1][1] )
-        pairs.append( pair )
+    for i in range(0, len(standings), 2):
+        pair = (
+            standings[i][0],
+            standings[i][1],
+            standings[i+1][0],
+            standings[i+1][1]
+        )
+        pairs.append(pair)
 
     # Convert the pairs array to a tuple as the requirements suggest.
     tuple(pairs)
