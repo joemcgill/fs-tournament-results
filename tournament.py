@@ -117,5 +117,5 @@ def swissPairings():
         pairs.append( pair )
 
     # Convert the pairs array to a tuple as the requirements suggest.
-    tuple(pairs);
-    return pairs;
+    tuple(pairs)
+    return pairs
