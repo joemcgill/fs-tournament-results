@@ -7,7 +7,7 @@
 -- these lines here.
 
 -- Drop database;
-DROP DATABASE tournament;
+DROP DATABASE IF EXISTS tournament;
 -- Create database.
 CREATE DATABASE tournament;
 
