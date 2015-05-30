@@ -27,6 +27,11 @@ def deletePlayers():
     db.commit()
     db.close
 
+def newTournament():
+    deleteMatches()
+    deletePlayers()
+    print "Player and Match data has been reset."
+
 def countPlayers():
     """Returns the number of players currently registered."""
     db = connect()
