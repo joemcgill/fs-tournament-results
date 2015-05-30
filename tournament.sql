@@ -18,7 +18,11 @@ CREATE DATABASE tournament;
 CREATE TABLE players (id serial primary key, name text);
 
 -- Create table for games.
-CREATE TABLE games (game_id serial primary key, winner integer, loser integer);
+CREATE TABLE games (
+	game_id serial primary key,
+	winner integer references players(id),
+	loser integer references players(id)
+);
 
 -- Create view to show standings.
 -- There are probably many ways to do this, but this seemed the least verbose.
