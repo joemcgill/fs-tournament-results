@@ -20,7 +20,7 @@ After downloading this code to your machine, type the following command in your 
 *NOTE: This will overwrite any previous database you have on your machine named, "tournament," so run with care.*
 
 ```
-pysql -f tournament.sql
+psql -f tournament.sql
 ```
 
 ### 2. Run the tests
