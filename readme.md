@@ -71,7 +71,7 @@ To register new players run `registerPlayer(name)`, replacing the 'name' paramet
 registerPlayer('Bob Hope')
 ```
 
-### Creating Match ups
+### Creating match ups
 
 To create a list of match ups for a round of the tournament, use the `swissPairings()` function, which will return an list of match ups containing each player's unique id and name.
 
@@ -86,4 +86,4 @@ reportMatch(4, 2)
 
 ### Get current standings
 
-To return a list of current standings, based on number of wins, user the `playerStandings()` function.
+To return a list of current standings, based on number of wins, use the `playerStandings()` function.
