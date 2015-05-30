@@ -57,7 +57,9 @@ def registerPlayer(name):
     """
     db = connect()
     c = db.cursor()
-    c.execute("INSERT into players (name) VALUES (%s);", (name,))
+    query = "INSERT into players (name) VALUES (%s);"
+    args = (name,)
+    c.execute(query, args)
     db.commit()
     db.close
 
@@ -93,9 +95,9 @@ def reportMatch(winner, loser):
     """
     db = connect()
     c = db.cursor()
-    c.execute(
-        "INSERT INTO games (winner, loser) VALUES (%s, %s);", (winner, loser,)
-    )
+    query = "INSERT INTO games (winner, loser) VALUES (%s, %s);"
+    args = (winner, loser,)
+    c.execute(query, args)
     db.commit()
     db.close()
 
