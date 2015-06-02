@@ -34,3 +34,10 @@ SELECT players.id, players.name,
 FROM players LEFT JOIN games
 ON players.id = games.winner OR players.id = games.loser
 GROUP BY players.id;
+
+-- Create a view for showing the number of byes per player
+CREATE VIEW byes AS
+SELECT players.id, players.name, count(games.winner) AS bye_count
+FROM players LEFT JOIN games
+ON players.id = games.winner AND games.loser IS NULL
+GROUP BY players.id;

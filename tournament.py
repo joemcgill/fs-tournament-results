@@ -102,6 +102,27 @@ def reportMatch(winner, loser):
     db.close()
 
 
+def assignBye():
+    """Returns a player who is being assigned a bye.
+
+    Assign a bye to the next player who has yet to receive one.
+
+    Returns:
+        A single tuple, containing (id, name) of the player who is being
+        assigned a bye in this round.
+    """
+    db = connect()
+    c = db.cursor()
+
+    # Query for a player who has yet to receive a bye
+    query = "SELECT id, name FROM byes WHERE bye_count = 0 LIMIT 1;"
+    c.execute(query)
+    player = c.fetchone()
+    db.close()
+
+    return player
+
+
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
 
@@ -117,20 +138,84 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    # Set up our variables for pairs, player getting a bye, and the bye pairing
+    pairs = []
+    byePlayer = False
+    byePair = False
+
     # Use the playerStandings function to get our standings, because DRY.
     standings = playerStandings()
+    num_players = len(standings)
 
-    # Loop through every other player in the standings and pair them with the
-    # next adjacent player.
-    pairs = []
-    for i in range(0, len(standings), 2):
-        pair = (
-            standings[i][0],
-            standings[i][1],
-            standings[i+1][0],
-            standings[i+1][1]
-        )
+    # If we have an odd number of players, we have to assign a bye
+    if 0 != num_players % 2:
+        byePlayer = assignBye()
+
+    # Loop through every other player in the standings and pair them with
+    # the next adjacent player, handle byes when we encounter them.
+    i = 0
+    while i < num_players:
+        # If we have a bye and it's been assigned to one of the next two
+        # players in the standings, then pair the bye accordingly.
+        if byePlayer and (byePlayer[0] == standings[i][0] or
+           byePlayer[0] == standings[i+1][0]):
+
+            # If the first player in the loop has a bye, create the bye pairing
+            # and pair the next two players in the standings
+            if byePlayer[0] == standings[i][0]:
+                # Our bye pairing
+                byePair = (
+                    standings[i][0],
+                    standings[i][1],
+                    '',
+                    "bye"
+                )
+
+                # Skip ahead one since we've only paired one and start over.
+                i += 1
+                continue
+
+            # If the second player in the loop has a bye, pair the first and
+            # third players and create the bye pair with the second player.
+            elif byePlayer[0] == standings[i+1][0]:
+                # Our next pair
+                pair = (
+                    standings[i][0],
+                    standings[i][1],
+                    standings[i+2][0],
+                    standings[i+2][1]
+                )
+
+                # Our bye pairing
+                byePair = (
+                    standings[i+1][0],
+                    standings[i+1][1],
+                    '',
+                    "bye"
+                )
+
+                # Skip ahead three since we've paired three players
+                i += 3
+
+        # If we don't have a bye or it's not being paired during this iteration
+        # just pair the next two players and move along.
+        else:
+            pair = (
+                standings[i][0],
+                standings[i][1],
+                standings[i+1][0],
+                standings[i+1][1]
+            )
+
+            # skip ahead two since we've paired two players
+            i += 2
+
+        # Append the main pair
         pairs.append(pair)
+
+    # After the loop runs, append the bye pair if one exists
+    if byePair:
+        pairs.append(byePair)
 
     # Convert the pairs array to a tuple as the requirements suggest.
     tuple(pairs)
