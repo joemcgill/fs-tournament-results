@@ -75,6 +75,8 @@ registerPlayer('Bob Hope')
 
 To create a list of match ups for a round of the tournament, use the `swissPairings()` function, which will return an list of match ups containing each player's unique id and name.
 
+If an odd number of players exist, one will be assigned a bye.
+
 ### Reporting matches
 
 To report the results of a match, use `reportMatch(winner, loser)`, where winner and loser are the unique ids of the winner and loser of the match, respectively.
@@ -82,6 +84,13 @@ To report the results of a match, use `reportMatch(winner, loser)`, where winner
 **Example:** Bob, whose ID is 4, beats John, whose ID is 2.
 ```
 reportMatch(4, 2)
+```
+
+To report the results of player who had been assigned a bye, use `reportMatch()` with that player listed as the winner and `None` listed as the loser.
+
+**Example:** Reporting a bye to a player whose player ID is 24.
+```
+reportMatch(24, None)
 ```
 
 ### Get current standings
